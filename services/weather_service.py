@@ -1,11 +1,10 @@
-import sys
-import urllib.parse
 import requests
 import pycountry
 
 WEATHER_API_URI = "https://api.openweathermap.org/data/2.5/weather"
-GEO_API_URI = "http://api.openweathermap.org/geo/1.0/direct"
+FORECAST_API_URI = "https://api.openweathermap.org/data/2.5/forecast"
 API_KEY = "0e2ca89ed39d35cefc9a599038e33413"  # Replace with your actual API key
+
 
 def get_country_name(country_code):
     """Convert a country code (e.g., 'GB') to its full name (e.g., 'United Kingdom')."""
@@ -13,75 +12,85 @@ def get_country_name(country_code):
         return pycountry.countries.get(alpha_2=country_code).name
     except AttributeError:
         return country_code
-    
-def search_city(query):
-    '''
-    Look for a given city. If multiple options are returned, have the user choose between them.
-    Return one city (or None)
-    '''
-    url = GEO_API_URI
-    #cities = requests.get(url, params={'q': query, 'appid': API_KEY}).json()
-    cities = requests.get(url, params={'q': query, 'limit': 5, 'appid': API_KEY}).json()
 
-    if not cities:
-        print(f"Sorry, OpenWeather does not know about {query}!")
+
+def get_weather(city, unit='C'):
+    """
+    Fetch current weather and 5-day forecast data.
+    Returns a structured dictionary with 'current' and 'forecast'.
+    """
+    # Fetch current weather
+    weather_response = requests.get(
+        WEATHER_API_URI, params={"q": f"{city['name']},{city['country']}", "appid": API_KEY}
+    )
+    current_data = weather_response.json()
+
+    # Fetch 5-day forecast
+    forecast_response = requests.get(
+        FORECAST_API_URI, params={"q": f"{city['name']},{city['country']}", "appid": API_KEY}
+    )
+    forecast_data = forecast_response.json()
+
+    # Check for errors
+    if weather_response.status_code != 200 or forecast_response.status_code != 200:
+        print("Error fetching weather data.")
         return None
 
-    unique_cities = {}
-    for city in cities:
-        key = (city['name'], city['country']) 
-        if key not in unique_cities:
-            unique_cities[key] = city
+    # Temperature unit conversion
+    def kelvin_to_unit(kelvin):
+        return (kelvin - 273.15) if unit == 'C' else (kelvin - 273.15) * 1.8 + 32
 
-    cities = list(unique_cities.values())
-    if len(cities) == 1:
-        return cities[0]
+    unit_label = "°C" if unit == 'C' else "°F"
 
-    for i, city in enumerate(cities):
-        country_full_name = get_country_name(city['country'])
-        print(f"{i + 1}. {city['name']}, {country_full_name}")
-        #print(f"{i + 1}. {city['name']}, {city['country']}")
+    # Function to generalize weather conditions
+    def simplify_condition(description):
+        description = description.lower()
+        if description in ["few clouds", "scattered clouds", "broken clouds", "overcast clouds"]:
+            return "Cloudy"
+        elif description in ["shower rain", "rain"]:
+            return "Rain"
+        elif description in ["mist", "haze"]:
+            return "Mist"
+        return description.capitalize()  # Default condition
 
-    index = int(input("Multiple matches found, which city did you mean?\n> ")) - 1
-    return cities[index]
+    # Current weather
+    current_weather = {
+        'temp': round(kelvin_to_unit(current_data['main']['temp'])),
+        'condition': simplify_condition(current_data['weather'][0]['description']),
+        'humidity': current_data['main']['humidity'],
+        'unit': unit_label
+    }
 
-def get_weather(city):
-    '''
-    Fetch the weather for a given city using OpenWeatherMap API.
-    '''
-    city_name = city['name']
-    country_code = city['country']
-    url = f"{WEATHER_API_URI}?q={city_name},{country_code}&appid={API_KEY}"
-    response = requests.get(url)
-    weather_data = response.json()
-    
+    # Simplified forecast: picking every 8th data point (roughly one per day)
+    forecast = []
+    for i in range(0, len(forecast_data['list']), 8):  # Each data point is 3 hours apart
+        day_data = forecast_data['list'][i]
+        forecast.append({
+            'day': day_data['dt_txt'].split()[0],  # Extract date
+            'temp': round(kelvin_to_unit(day_data['main']['temp'])),
+            'condition': simplify_condition(day_data['weather'][0]['description'])
+        })
 
-    if response.status_code != 200:
-        print(f"Failed to get weather data: {weather_data.get('message', 'Unknown error')}")
-        return None
-    
-    if unit == 'C':
-        current_temp = weather_data['main']['temp'] - 273.15
-        feels_like_temp = weather_data['main']['feels_like'] - 273.15
-        unit_label = "°C"
-    else:
-        current_temp = (weather_data['main']['temp'] - 273.15) * 1.8 + 32
-        feels_like_temp = (weather_data['main']['feels_like'] - 273.15) * 1.8 + 32
-        unit_label = "F"
-        
-    print(f"Weather in {city['name']}: {weather_data['weather'][0]['description']}")
-    print(f"Current temperature: {current_temp:.2f}{unit_label}")
-    print(f"The current temperature feels like: {feels_like_temp:.2f}{unit_label}")
+    return {
+        'current': current_weather,
+        'forecast': forecast
+    }
+
+
 if __name__ == "__main__":
-    query = input("Enter a city name: ")
-    city = search_city(query)
-    if city:
-        unit = input("Do you want the temperature in Fahrenheit or Celsius? (F/C): ").strip().upper()
-        weather = get_weather(city)
-        if weather:
-            temp_kelvin = weather['main']['temp']
-            if unit == 'C':
-                temp_celsius = temp_kelvin - 273.15
-                print(f"Weather in {city['name']}, {city['country']}: {weather['weather'][0]['description']}, Temperature: {temp_celsius:.2f}°C")
-            else:
-                print(f"Weather in {city['name']}, {city['country']}: {weather['weather'][0]['description']}, Temperature: {temp_kelvin}°F")
+    # Default city: Paris, France
+    city = {'name': 'Paris', 'country': 'FR'}
+    
+    # Default unit: Celsius
+    unit = 'C'
+    weather_data = get_weather(city, unit=unit)
+    
+    if weather_data:
+        print("\nCurrent Weather:")
+        print(f"Temperature: {weather_data['current']['temp']}{weather_data['current']['unit']}")
+        print(f"Condition: {weather_data['current']['condition']}")
+        print(f"Humidity: {weather_data['current']['humidity']}%")
+        
+        print("\n5-Day Forecast:")
+        for day in weather_data['forecast']:
+            print(f"{day['day']}: {day['temp']}{weather_data['current']['unit']}, {day['condition']}")
