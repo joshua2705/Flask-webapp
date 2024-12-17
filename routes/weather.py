@@ -24,6 +24,15 @@ def weather_page():
         print(city)
         # Call the weather forecast function with the entered city
         forecast = get_weather_forecast(city)
+        if not forecast or 'current' not in forecast:
+            forecast = {
+                'current': {'temp': 0, 'condition': 'Unknown', 'humidity': 0},
+                'forecast': [
+                    {'day': 'N/A', 'temp': 0, 'condition': 'Unknown'},
+                    {'day': 'N/A', 'temp': 0, 'condition': 'Unknown'},
+                    {'day': 'N/A', 'temp': 0, 'condition': 'Unknown'}
+                ]
+            }
     
     # Render the template with the forecast and city name
     return render_template('weather.html', forecast=forecast, city=city)
