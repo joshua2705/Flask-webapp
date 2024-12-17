@@ -22,6 +22,7 @@ def weather_page():
         # Retrieve city name from the form input
         city = request.form.get('city')
 
+        print(city)
         # Call the weather forecast function with the entered city
         forecast = get_weather_forecast(city)
     
