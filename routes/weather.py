@@ -15,8 +15,6 @@ weather_bp = Blueprint('weather', __name__)
 
 @weather_bp.route('/', methods=['GET', 'POST'])
 def weather_page():
-    forecast = get_weather_forecast
-    city = city
 
     if request.method == 'POST':
         # Retrieve city name from the form input
