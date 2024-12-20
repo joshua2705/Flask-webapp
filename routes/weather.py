@@ -7,20 +7,20 @@ weather_bp = Blueprint('weather', __name__)
 @weather_bp.route('/', methods=['GET', 'POST'])
 def weather_page():
     # Default city: Paris, France
-    city = {'name': 'Paris', 'country': 'FR'}  # Hardcoded default city
+    city = {'name': 'Paris', 'country': 'FR'}
     
     # Default unit: Celsius
     unit = 'C'
     
     forecast = None
-    city = None
     if request.method == 'POST':
         # Retrieve city name from the form input
-        city = request.form.get('city')
+        city['name'] = request.form.get('city')
 
     # Fetch weather data
     forecast = get_weather_forecast(city, unit=unit)
     
+    #Error handling
     if not forecast or 'current' not in forecast:
             forecast = {
                 'current': {'temp': 0, 'condition': 'Unknown', 'humidity': 0},
@@ -30,7 +30,7 @@ def weather_page():
                     {'day': 'N/A', 'temp': 0, 'condition': 'Unknown'}
                 ]
             }
-            
+
     if forecast:
         return render_template('weather.html', forecast=forecast)
     else:
