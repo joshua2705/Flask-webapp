@@ -1,4 +1,4 @@
-def get_weather_forecast():
+def get_weather_forecast(city):
     # Simulated weather data (in a real app, you'd call a weather API)
     return {
         'current': {
