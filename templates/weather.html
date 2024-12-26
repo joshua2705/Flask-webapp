@@ -4,28 +4,72 @@
 
 {% block content %}
 <div class="max-w-2xl mx-auto">
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h2 class="text-2xl font-bold mb-4">Current Weather</h2>
-        <div class="flex items-center justify-between">
-            <div>
-                <p class="text-4xl font-bold">{{ forecast.current.temp }}°C</p>
-                <p class="text-gray-600">{{ forecast.current.condition }}</p>
-                <p class="text-sm text-gray-500">Humidity: {{ forecast.current.humidity }}%</p>
-            </div>
-        </div>
-    </div>
 
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-2xl font-bold mb-4">3-Day Forecast</h2>
-        <div class="grid grid-cols-3 gap-4">
-            {% for day in forecast.forecast %}
-            <div class="text-center p-4 bg-gray-50 rounded-lg">
-                <p class="font-semibold">{{ day.day }}</p>
-                <p class="text-2xl font-bold">{{ day.temp }}°C</p>
-                <p class="text-gray-600">{{ day.condition }}</p>
+    <!-- Search Bar -->
+    <form method="POST" action="/" class="mb-6">
+        <div class="flex items-center">
+            <input 
+                type="text" 
+                name="city" 
+                placeholder="Enter city name..." 
+                class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                required
+            />
+            <button 
+                type="submit" 
+                class="ml-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
+                Search
+            </button>
+        </div>
+    </form>
+
+    {% if forecast and forecast.current and forecast.city %}
+    <!-- Display Current Weather -->
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Current Weather in {{ forecast.city }}</h2>
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-4xl font-bold">{{ forecast.current.temp }}°C</p>
+                    <p class="text-gray-600">{{ forecast.current.condition }}</p>
+                    <p class="text-sm text-gray-500">Humidity: {{ forecast.current.humidity }}%</p>
+                </div>
+                <div>
+                    {% if forecast.current.condition == "Sunny" %}
+                    <img src="{{ url_for('static', filename='images/clearsky.png') }}" alt="Sunny" class="w-16">
+                    {% elif forecast.current.condition == "Cloudy" %}
+                        <img src="{{ url_for('static', filename='images/cloudy.png') }}" alt="Cloudy" class="w-16">
+                    {% elif forecast.current.condition == "Rainy" %}
+                        <img src="{{ url_for('static', filename='images/rain.png') }}" alt="Rainy" class="w-16">
+                    {% elif forecast.current.condition == "Misty" %}
+                        <img src="{{ url_for('static', filename='images/mist.png') }}" alt="Rainy" class="w-16">
+                    {% elif forecast.current.condition == "Snowy" %}
+                        <img src="{{ url_for('static', filename='images/snow.png') }}" alt="Snowy" class="w-16">
+                    {% elif forecast.current.condition == "Thunderstorm" %}
+                        <img src="{{ url_for('static', filename='images/thunderstorm.png') }}" alt="Thunderstorm" class="w-16">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='images/default.png') }}" alt="Weather" class="w-16">
+                    {% endif %}
+                </div>
             </div>
-            {% endfor %}
+        </div>
+    
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-2xl font-bold mb-4">3-Day Forecast</h2>
+            <div class="grid grid-cols-3 gap-4">
+                {% for day in forecast.forecast %}
+                <div class="text-center p-4 bg-gray-50 rounded-lg">
+                    <p class="font-semibold">{{ day.day }}</p>
+                    <p class="text-2xl font-bold">{{ day.temp }}°C</p>
+                    <p class="text-gray-600">{{ day.condition }}</p>
+                </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
+    {% else %}
+            <p class="text-center text-gray-600 mt-4">No forecast data available. Please enter a valid city.</p>
+    {% endif %}
 </div>
 {% endblock %}
