@@ -1,76 +1,40 @@
 import requests
-import pycountry
+from services.weather_utils import format_forecast_weather, format_current_weather
 
 WEATHER_API_URI = "https://api.openweathermap.org/data/2.5/weather"
 FORECAST_API_URI = "https://api.openweathermap.org/data/2.5/forecast"
 API_KEY = "0e2ca89ed39d35cefc9a599038e33413"
 
 
-def get_country_name(country_code):
-    """Convert a country code (e.g., 'GB') to its full name (e.g., 'United Kingdom')."""
-    try:
-        return pycountry.countries.get(alpha_2=country_code).name
-    except AttributeError:
-        return country_code
-
-
-def get_weather_forecast(city, unit='C'):
+def get_weather(city, unit):
     """
     Fetch current weather and 5-day forecast data.
     Returns a structured dictionary with 'current' and 'forecast'.
     """
-    # Fetch current weather
-    weather_response = requests.get(
-        WEATHER_API_URI, params={"q": f"{city['name']},{city['country']}", "appid": API_KEY}
-    )
-    current_data = weather_response.json()
-
-    # Fetch 5-day forecast
-    forecast_response = requests.get(
-        FORECAST_API_URI, params={"q": f"{city['name']},{city['country']}", "appid": API_KEY}
-    )
-    forecast_data = forecast_response.json()
-
-    # Check for errors
-    if weather_response.status_code != 200 or forecast_response.status_code != 200:
-        print("Error fetching weather data.")
-        return None
-
-    # Temperature unit conversion
-    def kelvin_to_unit(kelvin):
-        return (kelvin - 273.15) if unit == 'C' else (kelvin - 273.15) * 1.8 + 32
-
-    # Function to generalize weather conditions
-    def simplify_condition(description):
-        description = description.lower()
-        if description in ["few clouds", "scattered clouds", "broken clouds", "overcast clouds"]:
-            return "Cloudy"
-        elif description in ["shower rain", "rain", "light rain"]:
-            return "Rainy"
-        elif description in ["mist", "haze"]:
-            return "Misty"
-        return description.capitalize()  # Default condition
-
-    # Current weather
-    current_weather = {
-        'temp': round(kelvin_to_unit(current_data['main']['temp'])),
-        'condition': simplify_condition(current_data['weather'][0]['description']),
-        'humidity': current_data['main']['humidity'],
-        'unit': "°C" if unit == 'C' else "°F"
-    }
-
-    # Simplified forecast: picking every 8th data point 3 days (roughly one per day)
-    forecast = []
-    for i in range(8, len(forecast_data['list'])-8, 8):  # Each data point is 3 hours apart
-        day_data = forecast_data['list'][i]
-        forecast.append({
-            'day': day_data['dt_txt'].split()[0],  # Extract date
-            'temp': round(kelvin_to_unit(day_data['main']['temp'])),
-            'condition': simplify_condition(day_data['weather'][0]['description'])
-        })
+    params = {"q": f"{city['name']},{city['country']}", "appid": API_KEY}
+    current_weather = get_current_weather(params, unit)
+    forecast = get_weather_forecast(params,unit)
         
     return {
         'current': current_weather,
         'forecast': forecast,
         'city': city['name']
     }
+
+def get_current_weather(params, unit):
+    # Fetch current weather
+    weather_response = requests.get(WEATHER_API_URI, params)
+    #Add error handling here
+
+    #Format weather into html readable form
+    current_weather = format_current_weather(weather_response.json(), unit)
+    return current_weather
+
+def get_weather_forecast(params, unit):
+    # Fetch weather forcast
+    forecast_response = requests.get(FORECAST_API_URI, params)
+    #Handle forcast error
+
+    #Format into 3 html readbable entries
+    forecast = format_forecast_weather(forecast_response.json(), unit)
+    return forecast

@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request
-from services.weather_service import get_weather_forecast
+from services.weather_service import get_weather
+import static.constants as constants
 
 # Blueprint for weather routes
 weather_bp = Blueprint('weather', __name__)
@@ -7,10 +8,10 @@ weather_bp = Blueprint('weather', __name__)
 @weather_bp.route('/', methods=['GET', 'POST'])
 def weather_page():
     # Default city: Paris, France
-    city = {'name': 'Paris', 'country': 'FR'}
+    city = constants.DEFAULT_CITY
     
     # Default unit: Celsius
-    unit = 'C'
+    unit = constants.DEFAULT_UNIT
     
     forecast = None
     if request.method == 'POST':
@@ -18,7 +19,7 @@ def weather_page():
         city['name'] = request.form.get('city')
 
     # Fetch weather data
-    forecast = get_weather_forecast(city, unit=unit)
+    forecast = get_weather(city, unit)
     
     #Error handling
     if not forecast or 'current' not in forecast:
