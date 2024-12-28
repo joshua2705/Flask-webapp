@@ -43,20 +43,18 @@ def get_weather(city, unit='C'):
     unit_label = "°C" if unit == 'C' else "°F"
 
     # Function to generalize weather conditions
-    def simplify_condition(description):
-        description = description.lower()
-        if description in ["few clouds", "scattered clouds", "broken clouds", "overcast clouds"]:
-            return "Cloudy"
-        elif description in ["shower rain", "rain"]:
-            return "Rain"
-        elif description in ["mist", "haze"]:
+    def simplify_condition(main):
+        main = main.lower()
+        if main in ["smoke", "haze", "dust", "fog","sand","ash","squall"]:
             return "Mist"
-        return description.capitalize()  # Default condition
+        elif main in ["drizzle"]:
+            return "Rain"
+        return main.capitalize()  # Default condition
 
     # Current weather
     current_weather = {
         'temp': round(kelvin_to_unit(current_data['main']['temp'])),
-        'condition': simplify_condition(current_data['weather'][0]['description']),
+        'condition': simplify_condition(current_data['weather'][0]['main']),
         'humidity': current_data['main']['humidity'],
         'unit': unit_label
     }
@@ -68,7 +66,7 @@ def get_weather(city, unit='C'):
         forecast.append({
             'day': day_data['dt_txt'].split()[0],  # Extract date
             'temp': round(kelvin_to_unit(day_data['main']['temp'])),
-            'condition': simplify_condition(day_data['weather'][0]['description'])
+            'condition': simplify_condition(day_data['weather'][0]['main'])
         })
 
     return {
