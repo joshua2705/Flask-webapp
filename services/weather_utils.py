@@ -11,7 +11,7 @@ def simplify_weather(description):
         return "Cloudy"
     elif description in ["shower rain", "rain", "light rain", "moderate rain"]:
         return "Rainy"
-    elif description in ["mist", "haze"]:
+    elif description in ["mist", "haze", "fog"]:
         return "Misty"
     return description.capitalize()  # Default condition
 
