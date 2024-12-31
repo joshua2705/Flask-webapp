@@ -94,27 +94,34 @@
     </div>
 </div>
 
+<div class="events-section">
+    <h2 class="text-2xl font-bold mb-4">Events</h2>
+    <!-- Event Box -->
+    <div class="event-box bg-white rounded-lg shadow-md p-4 flex items-center space-x-4">
+        <!-- Event Details Section -->
+        <div class="flex-1">
+            <p class="text-sm font-bold text-gray-700">Title:</p>
+            <p class="text-base text-gray-900">Sample Event</p>
+
+            <p class="text-sm font-bold text-gray-700">Date:</p>
+            <p class="text-base text-gray-900">2024-12-31</p>
+
+            <p class="text-sm font-bold text-gray-700">City:</p>
+            <p class="text-base text-gray-900">New York</p>
+
+            <p class="text-sm font-bold text-gray-700">Country:</p>
+            <p class="text-base text-gray-900">United States</p>
+
+            <p class="text-sm font-bold text-gray-700">Description:</p>
+            <p class="text-base text-gray-900">This is a description of the event.</p>
+        </div>
+
+        <!-- Picture Placeholder Section -->
+        <div class="w-32 h-32 bg-gray-200 rounded-md flex items-center justify-center shadow-inner">
+            <span class="text-gray-500 text-sm">Event Picture</span>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
-<div class="bg-white rounded-lg shadow-md p-6">
-    <h2 class="text-2xl font-bold mb-4">Events</h2>
-    {% if events %}
-    <div class="space-y-4">
-        {% for event in events %}
-        <div class="border-l-4 border-blue-500 pl-4 py-2">
-            <h3 class="font-bold">{{ event.name }}</h3>
-            <p class="text-sm text-gray-600">{{ event.date }}</p>
-            {% if event.description %}
-            <p class="text-gray-700 mt-1">{{ event.description }}</p>
-            {% endif %}
-        </div>
-        <div class="picture-output w-48 h-48 flex-shrink-0 bg-gray-200 rounded-md flex items-center justify-center">
-            <img src="placeholder.jpg" alt="Event Picture" class="w-full h-full object-cover rounded-md" />
-        </div>
-        {% endfor %}
-    </div>
-    {% else %}
-    <p class="text-gray-600">No events scheduled yet.</p>
-    {% endif %}
-</div>
-</div>
