@@ -33,8 +33,9 @@ def add_event():
     return redirect(url_for('calendar.calendar_page'))
 
 def is_future_event(event):
-    event_date = datetime.strptime(event.date, "%Y-%m-%d").date()
-    return event_date >= datetime.now().date()ate, "%Y-%m-%d").date()
+    try:
+        event_date = datetime.strptime(event.date, "%Y-%m-%d").date()
+        return event_date >= datetime.now().date()
     except ValueError:
         return False
     return event_date >= datetime.now().date()

@@ -24,17 +24,19 @@ def get_weather(city, unit):
 def get_current_weather(params, unit):
     # Fetch current weather
     weather_response = requests.get(WEATHER_API_URI, params)
-    #Add error handling here
+    if weather_response.status_code != 200:
+        return {"error": "Failed to fetch current weather data"}
 
-    #Format weather into html readable form
+    # Format weather into HTML readable form
     current_weather = format_current_weather(weather_response.json(), unit)
     return current_weather
 
 def get_weather_forecast(params, unit):
-    # Fetch weather forcast
+    # Fetch weather forecast
     forecast_response = requests.get(FORECAST_API_URI, params)
-    #Handle forcast error
+    if forecast_response.status_code != 200:
+        return {"error": "Failed to fetch weather forecast data"}
 
-    #Format into 3 html readbable entry
+    # Format into 3 HTML readable entry
     forecast = format_forecast_weather(forecast_response.json(), unit)
     return forecast
