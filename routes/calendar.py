@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for
 from services.calendar_service import save_events, get_events
 from datetime import datetime, timedelta
 from models.event import Event
+import static.constants
 import pytz
 
 calendar_bp = Blueprint('calendar', __name__)
@@ -15,7 +16,7 @@ def calendar_page():
                  for x in range(5)]
     day_range = [(today + timedelta(days=x)).strftime('%A') 
                  for x in range(5)]
-    return render_template('calendar.html', events=events, date_range=date_range, day_range=day_range)
+    return render_template('calendar.html', events=events, date_range=date_range, day_range=day_range, countries= static.constants.COUNTRIES)
 
 @calendar_bp.route('/calendar/add', methods=['POST'])
 def add_calendar_event():

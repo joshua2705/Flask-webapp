@@ -72,12 +72,10 @@
                         <label class="block text-sm font-medium text-gray-700">Country</label>
                         <select name="country" required
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                            <option value="">Select Country</option>
-                            <option value="US">United States</option>
-                            <option value="CA">Canada</option>
-                            <option value="UK">United Kingdom</option>
-                            <option value="IN">India</option>
-                            <option value="AU">Australia</option>
+                            <option value="" disabled selected></option>
+                            {% for country in countries %}
+                            <option value="{{ country.code }}">{{ country.name }}</option>
+                            {% endfor %}
                            
                         </select>
                     </div>

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 # Temperature unit conversion
 def tempConvert(kelvin, unit):
     """
@@ -36,7 +38,7 @@ def format_forecast_weather(forecast_data, unit):
     for i in range(8, len(forecast_data['list']) - 8, 8):  # Each data point is 3 hours apart
         day_data = forecast_data['list'][i]
         forecast.append({
-            'day': day_data['dt_txt'].split()[0],  # Extract date
+            'day': datetime.strptime(day_data['dt_txt'].split()[0],'%Y-%m-%d').strftime("%A"),  # Extract date
             'temp': round(tempConvert(day_data['main']['temp'], unit)),
             'condition': simplify_condition(day_data['weather'][0]['main'])  # Corrected function name
         })
