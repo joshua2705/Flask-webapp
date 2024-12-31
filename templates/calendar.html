@@ -3,7 +3,7 @@
 {% block title %}Calendar{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="max-w-2xl mx-auto">
     <div class="bg-white rounded-lg shadow-md p-6 mb-6">
         <h2 class="text-2xl font-bold mb-4">Add Event</h2>
         <form action="{{ url_for('calendar.add_calendar_event') }}" method="POST">
@@ -55,7 +55,7 @@
 </div>
 
 
-<div class="bg-white rounded-lg shadow-md p-6">
+<div class="bg-white rounded-lg shadow-md p-6 max-w-2xl mx-auto ">
     <h2 class="text-2xl font-bold mb-4">Events</h2>
     {% if events %}
     <div class="space-y-4">
@@ -70,8 +70,8 @@
                 {% endif %}
             </div>
             <!-- Picture Placeholder Section -->
-            <div class="picture-output w-48 h-48 flex-shrink-0 bg-gray-200 rounded-md flex items-center justify-center shadow-inner">
-                <img src="placeholder.jpg" alt="Event Picture" class="w-full h-full object-cover rounded-md" />
+            <div class="picture-output w-20 h-20 flex-shrink-0 bg-gray-200 rounded-md flex items-center justify-center shadow-inner">
+                <img src="{{ url_for('static', filename='images/thunderstorm.png') }}" alt="Event Picture" class="w-full h-full object-cover rounded-md" />
             </div>
         </div>
         {% endfor %}
