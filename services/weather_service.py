@@ -1,10 +1,12 @@
 import requests
 from services.weather_utils import format_forecast_weather, format_current_weather
+import static.constants as constants
 
 WEATHER_API_URI = "https://api.openweathermap.org/data/2.5/weather"
 FORECAST_API_URI = "https://api.openweathermap.org/data/2.5/forecast"
 API_KEY = "0e2ca89ed39d35cefc9a599038e33413"
 
+countries = constants.COUNTRIES
 
 def get_weather(city, unit):
     """
@@ -18,7 +20,8 @@ def get_weather(city, unit):
     return {
         'current': current_weather,
         'forecast': forecast,
-        'city': city['name']
+        'city': city['name'],
+        'country': next((c['name'] for c in countries if c['code'] == city['country']), None)
     }
 
 def get_current_weather(params, unit):

@@ -21,13 +21,12 @@
                     class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                     required
                 >
-                    <option value="" disabled selected>Select country</option>
+                    <option value="" disabled selected>Select country...</option>
                     {% for country in countries %}
-                        <option value="{{ country.code }}">{{ country.name }}</option>
+                    <option value="{{ country.code }}">{{ country.name }}</option>
                     {% endfor %}
                 </select>
-            </div>
-            <div class="flex justify-end mt-4">
+            
                 <!-- Submit Button -->
                 <button 
                     type="submit" 
@@ -44,7 +43,7 @@
     <div class="max-w-2xl mx-auto">
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
             <h2 class="text-2xl font-bold mb-4">
-                Current Weather in {{ forecast.city }}, {{ selected_country_name }}
+                Current Weather in {{ forecast.city }}, {{ forecast.country }}
             </h2>
             <div class="flex items-center justify-between">
                 <div>
@@ -55,13 +54,13 @@
                 <div>
                     {% if forecast.current.condition == "Sunny" %}
                         <img src="{{ url_for('static', filename='images/clearsky.png') }}" alt="Sunny" class="w-16">
-                    {% elif forecast.current.condition == "Cloudy" %}
+                    {% elif forecast.current.condition == "Clouds" %}
                         <img src="{{ url_for('static', filename='images/cloudy.png') }}" alt="Cloudy" class="w-16">
-                    {% elif forecast.current.condition == "Rainy" %}
+                    {% elif forecast.current.condition == "Rain" %}
                         <img src="{{ url_for('static', filename='images/rain.png') }}" alt="Rainy" class="w-16">
-                    {% elif forecast.current.condition == "Misty" %}
+                    {% elif forecast.current.condition == "Mist" %}
                         <img src="{{ url_for('static', filename='images/mist.png') }}" alt="Misty" class="w-16">
-                    {% elif forecast.current.condition == "Snowy" %}
+                    {% elif forecast.current.condition == "Snow" %}
                         <img src="{{ url_for('static', filename='images/snow.png') }}" alt="Snowy" class="w-16">
                     {% elif forecast.current.condition == "Thunderstorm" %}
                         <img src="{{ url_for('static', filename='images/thunderstorm.png') }}" alt="Thunderstorm" class="w-16">
