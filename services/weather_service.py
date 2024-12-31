@@ -35,6 +35,6 @@ def get_weather_forecast(params, unit):
     forecast_response = requests.get(FORECAST_API_URI, params)
     #Handle forcast error
 
-    #Format into 3 html readbable entries
+    #Format into 3 html readbable entry
     forecast = format_forecast_weather(forecast_response.json(), unit)
     return forecast

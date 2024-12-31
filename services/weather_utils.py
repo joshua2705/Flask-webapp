@@ -48,7 +48,7 @@ def select_image(condition):
 def format_forecast_weather(forecast_data, unit):
     forecast = []
     # Simplified forecast: picking every 8th data point 3 days (roughly one per day)
-    for i in range(8, len(forecast_data['list'])-8, 8):  # Each data point is 3 hours apart
+    for i in range(8, len(forecast_data['list'])-8, 8):  # Each data point is 3 hours apar
         day_data = forecast_data['list'][i]
         forecast.append({
             'day': day_data['dt_txt'].split()[0],  # Extract date
