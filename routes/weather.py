@@ -7,33 +7,17 @@ weather_bp = Blueprint('weather', __name__)
 
 @weather_bp.route('/', methods=['GET', 'POST'])
 def weather_page():
-    # Default city: Paris, France
-    city = constants.DEFAULT_CITY
-    
-    # Default unit: Celsius
+    # Default to Paris, France
+    city = {"name": constants.DEFAULT_CITY, "country": constants.DEFAULT_COUNTRY}  
     unit = constants.DEFAULT_UNIT
-    
-    forecast = None
+
     if request.method == 'POST':
-        # Retrieve city name from the form input
-        city['name'] = request.form.get('city')
+        # Retrieve city and country from form
+        city['name'] = request.form.get('city', constants.DEFAULT_CITY)
+        city['country'] = request.form.get('country', constants.DEFAULT_COUNTRY)
 
     # Fetch weather data
     forecast = get_weather(city, unit)
     
-    #Error handling
-    if not forecast or 'current' not in forecast:
-            forecast = {
-                'current': {'temp': 0, 'condition': 'Unknown', 'humidity': 0},
-                'forecast': [
-                    {'day': 'N/A', 'temp': 0, 'condition': 'Unknown'},
-                    {'day': 'N/A', 'temp': 0, 'condition': 'Unknown'},
-                    {'day': 'N/A', 'temp': 0, 'condition': 'Unknown'}
-                ]
-            }
-
-    if forecast:
-        return render_template('weather.html', forecast=forecast)
-    else:
-        return "Failed to fetch weather data", 500
-    
+    # Pass data to template
+    return render_template('weather.html',countries=constants.COUNTRIES,forecast=forecast)
