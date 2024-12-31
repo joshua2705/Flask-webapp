@@ -1,5 +1,3 @@
-
-
 # Temperature unit conversion
 def tempConvert(kelvin, unit):
     return (kelvin - 273.15) if unit == 'C' else (kelvin - 273.15) * 1.8 + 32
@@ -22,6 +20,31 @@ def format_current_weather(current_data, unit):
         'humidity': current_data['main']['humidity']
     }
 
+def select_image(condition):
+    """
+    Selects an image based on the weather condition
+
+    Args: 
+        condition (str): Weather condition
+
+    Returns:
+        str: Image URL (Filename of the corresponding image)
+    """
+
+    images = {
+        "Sunny": "clearsky.png",
+        "Cloudy": "cloudy.png",
+        "Rainy": "rain.png",
+        "Misty": "mist.png",
+        "Snowy": "snow.png",
+        "Thunderstorm": "thunderstorm.png",
+        "Drizzle": "drizzle.png",
+        "Tornado": "tornado.png",
+    }
+   # Return the image if the condition matches, otherwise return a default image.
+    return images.get(condition, "clearsky.png")
+
+# Function to format forecast weather data
 def format_forecast_weather(forecast_data, unit):
     forecast = []
     # Simplified forecast: picking every 8th data point 3 days (roughly one per day)
@@ -33,4 +56,7 @@ def format_forecast_weather(forecast_data, unit):
             'condition': simplify_weather(day_data['weather'][0]['description'])
         })
     return forecast
-    
+
+if __name__ == "__main__":
+    condition = "Sunny"
+    print(select_image(condition))

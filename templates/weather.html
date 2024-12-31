@@ -36,21 +36,8 @@
                     <p class="text-sm text-gray-500">Humidity: {{ forecast.current.humidity }}%</p>
                 </div>
                 <div>
-                    {% if forecast.current.condition == "Sunny" %}
-                    <img src="{{ url_for('static', filename='images/clearsky.png') }}" alt="Sunny" class="w-16">
-                    {% elif forecast.current.condition == "Cloudy" %}
-                        <img src="{{ url_for('static', filename='images/cloudy.png') }}" alt="Cloudy" class="w-16">
-                    {% elif forecast.current.condition == "Rainy" %}
-                        <img src="{{ url_for('static', filename='images/rain.png') }}" alt="Rainy" class="w-16">
-                    {% elif forecast.current.condition == "Misty" %}
-                        <img src="{{ url_for('static', filename='images/mist.png') }}" alt="Rainy" class="w-16">
-                    {% elif forecast.current.condition == "Snowy" %}
-                        <img src="{{ url_for('static', filename='images/snow.png') }}" alt="Snowy" class="w-16">
-                    {% elif forecast.current.condition == "Thunderstorm" %}
-                        <img src="{{ url_for('static', filename='images/thunderstorm.png') }}" alt="Thunderstorm" class="w-16">
-                    {% else %}
-                        <img src="{{ url_for('static', filename='images/default.png') }}" alt="Weather" class="w-16">
-                    {% endif %}
+                    <img src="{{ url_for('static', filename=select_image(forecast.current.condition)) }}" alt="{{ forecast.current.condition }}" class="w-16">
+                
                 </div>
             </div>
         </div>
