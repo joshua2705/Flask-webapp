@@ -95,3 +95,26 @@
 </div>
 
 {% endblock %}
+
+<div class="bg-white rounded-lg shadow-md p-6">
+    <h2 class="text-2xl font-bold mb-4">Events</h2>
+    {% if events %}
+    <div class="space-y-4">
+        {% for event in events %}
+        <div class="border-l-4 border-blue-500 pl-4 py-2">
+            <h3 class="font-bold">{{ event.name }}</h3>
+            <p class="text-sm text-gray-600">{{ event.date }}</p>
+            {% if event.description %}
+            <p class="text-gray-700 mt-1">{{ event.description }}</p>
+            {% endif %}
+        </div>
+        <div class="picture-output w-48 h-48 flex-shrink-0 bg-gray-200 rounded-md flex items-center justify-center">
+            <img src="placeholder.jpg" alt="Event Picture" class="w-full h-full object-cover rounded-md" />
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-gray-600">No events scheduled yet.</p>
+    {% endif %}
+</div>
+</div>
