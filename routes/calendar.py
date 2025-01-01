@@ -9,8 +9,8 @@ calendar_bp = Blueprint('calendar', __name__)
 
 @calendar_bp.route('/calendar')
 def calendar_page():
-    events = get_events()
-    events = list(filter(past_events, events))
+    events = [event for event in get_events() if is_future_event(event)]
+    #events = list(filter(past_events, events))
     today = datetime.now(pytz.timezone('Europe/Paris')).date()
     date_range = [(today + timedelta(days=x)).strftime('%d-%m-%Y') 
                  for x in range(5)]
@@ -19,22 +19,22 @@ def calendar_page():
     return render_template('calendar.html', events=events, date_range=date_range, day_range=day_range, countries= static.constants.COUNTRIES)
 
 @calendar_bp.route('/calendar/add', methods=['POST'])
-def add_calendar_event():
-
-    events = get_events()
-    events = list(filter(past_events, events))
+def add_event():
+    events = [event for event in get_events() if is_future_event(event)]
     new_event = Event(
-        name=request.form['title'],
-        date=request.form['date'],
-        city=request.form['city'],
-        country=request.form['country'],
-        description=request.form['description']
+        name=request.form.get('title', 'Untitled Event'),
+        date=request.form.get('date', datetime.now().strftime('%d-%m-%Y')),
+        city=request.form.get('city', 'Unknown City'),
+        country=request.form.get('country', 'Unknown Country'),
+        description=request.form.get('description', 'No Description')
     )
-    
     events.append(new_event)
     save_events(events)
     return redirect(url_for('calendar.calendar_page'))
 
-def past_events(event):
-    today = datetime.strptime(event.date, "%d-%m-%Y").date()
-    return today >= datetime.now().date()
+def is_future_event(event):
+    try:
+        event_date = datetime.strptime(event.date, "%d-%m-%Y").date()
+        return event_date >= datetime.now().date()
+    except ValueError:
+        return False

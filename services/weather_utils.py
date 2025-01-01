@@ -29,6 +29,26 @@ def format_current_weather(current_data, unit):
         'humidity': current_data['main']['humidity'] 
     }
 
+def select_image(condition):
+    """
+    Selects an image based on the weather condition
+    Args: condition (str): Weather condition
+    Returns:str: Image URL (Filename of the corresponding image)
+    """
+    images = {
+        "Sunny": "images/clearsky.png",
+        "Clouds": "images/cloudy.png",
+        "Rain": "images/rain.png",
+        "Mist": "images/mist.png",
+        "Snow": "images/snow.png",
+        "Thunderstorm": "images/thunderstorm.png",
+        "Drizzle": "images/drizzle.png",
+        "Tornado": "images/tornado.png",
+    }
+   # Return the image if the condition matches, otherwise return a default image.
+    return images.get(condition, "images/default.png")
+
+# Function to format forecast weather data
 def format_forecast_weather(forecast_data, unit):
     """
     Format the forecast data into a list of simplified weather dictionaries.
