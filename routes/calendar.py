@@ -9,8 +9,7 @@ calendar_bp = Blueprint('calendar', __name__)
 
 @calendar_bp.route('/calendar')
 def calendar_page():
-    events = get_events()
-    events = [event for event in events if is_future_event(event)]
+    events = [event for event in get_events() if is_future_event(event)]
     #events = list(filter(past_events, events))
     today = datetime.now(pytz.timezone('Europe/Paris')).date()
     date_range = [(today + timedelta(days=x)).strftime('%d-%m-%Y') 
@@ -21,7 +20,7 @@ def calendar_page():
 
 @calendar_bp.route('/calendar/add', methods=['POST'])
 def add_event():
-    events = get_events()
+    events = [event for event in get_events() if is_future_event(event)]
     new_event = Event(
         name=request.form.get('title', 'Untitled Event'),
         date=request.form.get('date', datetime.now().strftime('%d-%m-%Y')),
@@ -39,7 +38,3 @@ def is_future_event(event):
         return event_date >= datetime.now().date()
     except ValueError:
         return False
-    
-def past_events(event):
-    today = datetime.strptime(event.date, "%d-%m-%Y").date()
-    return today >= datetime.now().date()
