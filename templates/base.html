@@ -3,14 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Weather & Calendar App{% endblock %}</title>
+    <title>{% block title %}SkyGuru{% endblock %}</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheets/styles.css') }}"/>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/original-icon.png') }}">
 </head>
 <body class="bg-gray-100">
     <nav class="bg-blue-600 text-white p-4">
-        <div class="container mx-auto flex justify-between">
-            <a href="/" class="font-bold">Weather Forecast</a>
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <a href="/" class="flex items-center space-x-2">
+                    <img src="{{ url_for('static', filename='images/white-on-transparent.png') }}" alt="SkyGuru Logo" class="h-8">
+                </a>
+            </div>
             <a href="/calendar" class="font-bold">Schedule</a>
         </div>
     </nav>
