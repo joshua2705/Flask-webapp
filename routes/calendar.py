@@ -1,22 +1,42 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from services.calendar_service import save_events, get_events
+from services.weather_service import get_weather_forecast
+from services.weather_utils import select_image, find_forecast_weather, simplify_condition
 from datetime import datetime, timedelta
 from models.event import Event
-import static.constants
+import static.constants as constants
 import pytz
 
+API_KEY = constants.API_KEY
 calendar_bp = Blueprint('calendar', __name__)
 
 @calendar_bp.route('/calendar')
 def calendar_page():
     events = [event for event in get_events() if is_future_event(event)]
-    #events = list(filter(past_events, events))
     today = datetime.now(pytz.timezone('Europe/Paris')).date()
     date_range = [(today + timedelta(days=x)).strftime('%d-%m-%Y') 
                  for x in range(5)]
     day_range = [(today + timedelta(days=x)).strftime('%A') 
                  for x in range(5)]
-    return render_template('calendar.html', events=events, date_range=date_range, day_range=day_range, countries= static.constants.COUNTRIES)
+    
+
+    updated_events = []
+    for event in events:
+        params = {"q": f"{event.city},{event.country}", "appid": API_KEY}
+        response_data = get_weather_forecast(params)
+        
+        forecast = find_forecast_weather(response_data, event.date)
+        condition = simplify_condition(forecast['weather'][0]['main'])
+        forecast_image_file = select_image(condition)
+        
+        updated_events.append((event,forecast_image_file))
+
+    return render_template('calendar.html', 
+                           events=updated_events, 
+                           date_range=date_range, 
+                           day_range=day_range, 
+                           countries= constants.COUNTRIES
+                           )
 
 @calendar_bp.route('/calendar/add', methods=['POST'])
 def add_event():

@@ -1,1 +1,31 @@
-[{"name": "title", "date": "2024-12-31", "city": "paris", "country": "france", "description": "description"}, {"name": "title", "date": "2024-12-31", "city": "london", "country": "UK", "description": "des"}]
+[
+    {
+        "name": "Joshua",
+        "date": "01-01-2025",
+        "city": "Chennai",
+        "country": "IN",
+        "description": "Nothing much"
+    },
+    {
+        "name": "Joshua Event",
+        "date": "03-01-2025",
+        "city": "Chennai",
+        "country": "IN",
+        "description": "Nothing much"
+    },
+    {
+        "name": "Event in Paris",
+        "date": "04-01-2025",
+        "city": "Paris",
+        "country": "FR",
+        "description": "Paris Event"
+    },
+    {
+        "name": "sdv",
+        "date": "03-01-2025",
+        "city": "Paris",
+        "country": "FR",
+        "description": "sadf"
+    }
+]
+
