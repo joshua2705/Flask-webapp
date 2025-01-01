@@ -60,6 +60,22 @@ def format_forecast_weather(forecast_data, unit):
         forecast.append({
             'day': datetime.strptime(day_data['dt_txt'].split()[0],'%Y-%m-%d').strftime("%A"),  # Extract date
             'temp': round(tempConvert(day_data['main']['temp'], unit)),
-            'condition': simplify_condition(day_data['weather'][0]['main'])  # Corrected function name
+            'condition': simplify_condition(day_data['weather'][0]['main'])
         })
     return forecast
+
+# Function to find the forecast weather data for a particular day
+def find_forecast_weather(forecast_data, forecast_date):
+
+    forecast_date = datetime.strptime(forecast_date,'%d-%m-%Y')
+    
+    for i in range(0, len(forecast_data['list']), 8):  # Each data point is 3 hours apart
+        day_data = forecast_data['list'][i]
+        day_forecast = datetime.strptime(day_data['dt_txt'].split()[0],'%Y-%m-%d')
+        
+        if forecast_date == day_forecast:
+            return day_data
+    
+    return [{
+        'weather': [{"main":"Null"}]
+    }]
