@@ -32,26 +32,21 @@ def format_current_weather(current_data, unit):
 def select_image(condition):
     """
     Selects an image based on the weather condition
-
-    Args: 
-        condition (str): Weather condition
-
-    Returns:
-        str: Image URL (Filename of the corresponding image)
+    Args: condition (str): Weather condition
+    Returns:str: Image URL (Filename of the corresponding image)
     """
-
     images = {
-        "Sunny": "clearsky.png",
-        "Cloudy": "cloudy.png",
-        "Rainy": "rain.png",
-        "Misty": "mist.png",
-        "Snowy": "snow.png",
-        "Thunderstorm": "thunderstorm.png",
-        "Drizzle": "drizzle.png",
-        "Tornado": "tornado.png",
+        "Sunny": "images/clearsky.png",
+        "Clouds": "images/cloudy.png",
+        "Rain": "images/rain.png",
+        "Mist": "images/mist.png",
+        "Snow": "images/snow.png",
+        "Thunderstorm": "images/thunderstorm.png",
+        "Drizzle": "images/drizzle.png",
+        "Tornado": "images/tornado.png",
     }
    # Return the image if the condition matches, otherwise return a default image.
-    return images.get(condition, "clearsky.png")
+    return images.get(condition, "images/default.png")
 
 # Function to format forecast weather data
 def format_forecast_weather(forecast_data, unit):
