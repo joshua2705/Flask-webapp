@@ -56,7 +56,3 @@ def format_forecast_weather(forecast_data, unit):
             'condition': simplify_weather(day_data['weather'][0]['description'])
         })
     return forecast
-
-if __name__ == "__main__":
-    condition = "Sunny"
-    print(select_image(condition))

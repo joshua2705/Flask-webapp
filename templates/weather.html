@@ -36,7 +36,7 @@
                     <p class="text-sm text-gray-500">Humidity: {{ forecast.current.humidity }}%</p>
                 </div>
                 <div>
-                    <img src="{{ url_for('static', filename=select_image(forecast.current.condition)) }}" alt="{{ forecast.current.condition }}" class="w-16">
+                    <img src="{{ url_for('static', filename= image_file) }}" alt="{{ forecast.current.condition }}" class="w-16">
                 </div>
             </div>
         </div>

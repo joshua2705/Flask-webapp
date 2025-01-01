@@ -9,16 +9,10 @@ calendar_bp = Blueprint('calendar', __name__)
 def calendar_page():
     events = get_events()
     events = [event for event in events if is_future_event(event)]
-    date_format_map = {event.date: datetime.strptime(event.date, "%Y-%m-%d").strftime("%A") for event in events}
-    
-    import logging
-    logging.basicConfig(level=logging.DEBUG)
-    logging.debug(events)
-    print(events)
     
     return render_template('calendar.html', events=events)
 
-@calendar_bp.route('/calendar', methods=['POST'])
+@calendar_bp.route('/calendar/add', methods=['POST'])
 def add_event():
     events = get_events()
     new_event = Event(
@@ -38,4 +32,3 @@ def is_future_event(event):
         return event_date >= datetime.now().date()
     except ValueError:
         return False
-    return event_date >= datetime.now().date()
