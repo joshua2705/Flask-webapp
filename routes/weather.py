@@ -31,19 +31,6 @@ def weather_page():
     #Fetch weather data
     forecast = get_weather(city, unit)
 
-    #Error handling
-    if not forecast or 'current' not in forecast:
-        forecast = {
-                'current': {'temp': 0, 'condition': 'Unknown', 'humidity': 0},
-                'forecast': [
-                    {'day': 'N/A', 'temp': 0, 'condition': 'Unknown'},
-                    {'day': 'N/A', 'temp': 0, 'condition': 'Unknown'},
-                    {'day': 'N/A', 'temp': 0, 'condition': 'Unknown'}
-                ],
-                'city': 'N/A',
-                'country': ''
-            }
-
     #Add the correct logo according to the wather condition
     forecast_image_file = select_image(forecast['current']['condition'])
     
