@@ -56,7 +56,7 @@ def get_current_weather(params):
     if weather_response.status_code != 200 or 'main' not in response_data:
         return {
             "main":{
-                'temp': 0,
+                'temp': 273,
                 'condition': 'Unknown',
                 'humidity': 0
             },
