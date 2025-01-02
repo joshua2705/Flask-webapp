@@ -10,12 +10,22 @@ countries = constants.COUNTRIES
 def get_weather(city, unit):
     """
     Fetch current weather and 5-day forecast data.
-    Returns a structured dictionary with 'current' and 'forecast'.
+   
+    Arguments:
+        city (dict): A dictionary containing the 'name' and 'country' (country code) of the city.
+        unit (str): The desired temperature unit ('C' for Celsius or 'F' for Fahrenheit).
+        
+    Returns:
+        A structured dictionary with 'current' and 'forecast'.
     """
+    # Prepare query parameters for the API request
     params = {"q": f"{city['name']},{city['country']}", "appid": API_KEY}
+    
+    # Fetch current weather and forecast
     current_weather = format_current_weather(get_current_weather(params), unit)
     forecast        = format_forecast_weather(get_weather_forecast(params), unit)
         
+    # Return the combined weather data
     return {
         'current': current_weather,
         'forecast': forecast,
@@ -24,6 +34,20 @@ def get_weather(city, unit):
     }
 
 def get_current_weather(params):
+    """ 
+    Fetches the current weather data from OpenWeather API and formats it.
+
+    Arguments:
+        params (dict): API query parameters.
+        unit (str): The desired temperature unit ('C' or 'F').
+
+    Returns:
+        Dictionary containing:
+        - 'temp': Current temperature.
+        - 'condition': General weather condition.
+        - 'humidity': Current humidity percentage.
+        Returns default values if the API response is invalid.
+    """
     # Fetch current weather
     weather_response = requests.get(WEATHER_API_URI, params)
     response_data = weather_response.json()
@@ -45,6 +69,21 @@ def get_current_weather(params):
     return response_data
 
 def get_weather_forecast(params):
+    """
+    Gets the 5-day weather forecast data from OpenWeather API and formats it.
+
+    Arguments:
+        params (dict): API query parameters.
+        unit (str): The desired temperature unit ('C' or 'F').
+
+    Returns:
+        A list of dictionaries, each containing:
+        - 'day': Date of the forecast.
+        - 'temp': Forecasted temperature.
+        - 'condition': Forecasted general weather condition.
+        Returns default values if the API response is invalid.
+    """    
+
     # Fetch weather forecast
     forecast_response = requests.get(FORECAST_API_URI, params)
     response_data = forecast_response.json()
