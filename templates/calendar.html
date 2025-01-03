@@ -1,28 +1,101 @@
 {% extends "base.html" %}
 
-{% block title %}Calendar{% endblock %}
+{% block title %}Schedule{% endblock %}
 
 {% block content %}
 <div class="max-w-2xl mx-auto">
+    <!-- Form Section -->
     <div class="bg-white rounded-lg shadow-md p-6 mb-6">
         <h2 class="text-2xl font-bold mb-4">Add Event</h2>
-        <form action="{{ url_for('calendar.add_calendar_event') }}" method="POST">
+        <!-- Form to Add a New Event -->
+        <form action="{{ url_for('calendar.add_event') }}" method="POST">
             <div class="space-y-4">
+                <!-- Input for Event Title -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Event Title</label>
+                    <label class="block pl-1.5 text-sm font-medium text-gray-700">Event Title</label>
                     <input type="text" name="title" required
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        class="mt-3 h-8 pl-1.5 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
                 </div>
+                <!-- Buttons to create the date -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Date</label>
-                    <input type="date" name="date" required
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <ul id="date"
+                        class="filter-switch flex items-center relative h-10 p-1 space-x-1 bg-gray-200 rounded-md font-semibold text-blue-600 my-4 border border-gray-300">
+                        <!-- Today Button -->
+                        <li class="filter-switch-item flex flex-1 relative h-8 bg-gray-300x">
+                            <input type="radio" name="date" id="filter-0" class="sr-only"
+                                value="{{date_range[0]}}" required>
+                            <label for="filter-0"
+                                class="h-8 py-1 px-2 flex-1 text-sm leading-6 text-gray-600 hover:text-gray-800 bg-white rounded shadow-md">
+                                Today
+                            </label>
+                            <div aria-hidden="true" class="filter-active"></div>
+                        </li>
+                        <!-- Tomorrow Button -->
+                        <li class="filter-switch-item flex flex-1 relative h-8 bg-gray-300x">
+                            <input type="radio" name="date" id="filter-1" class="sr-only"
+                                value="{{date_range[1]}}">
+                            <label for="filter-1"
+                                class="h-8 py-1 px-2 flex-1 text-sm leading-6 text-gray-600 hover:text-gray-800 bg-white rounded shadow-md">
+                                Tomorrow
+                            </label>
+                        </li>
+                        <!-- Other Dates (Dynamic) -->
+                        <li class="filter-switch-item flex flex-1 relative h-8 bg-gray-300x">
+                            <input type="radio" name="date" id="filter-2" class="sr-only"
+                                value="{{date_range[2]}}">
+                            <label for="filter-2"
+                                class="h-8 py-1 px-2 flex-1 text-sm leading-6 text-gray-600 hover:text-gray-800 bg-white rounded shadow-md">
+                                {{day_range[2]}}
+                            </label>
+                        </li>
+                        <li class="filter-switch-item flex flex-1 relative h-8 bg-gray-300x">
+                            <input type="radio" name="date" id="filter-3" class="sr-only"
+                                value="{{date_range[3]}}">
+                            <label for="filter-3"
+                                class="h-8 py-1 px-2 flex-1 text-sm leading-6 text-gray-600 hover:text-gray-800 bg-white rounded shadow-md">
+                                {{day_range[3]}}
+                            </label>
+                        </li>
+                        <li class="filter-switch-item flex flex-1 relative h-8 bg-gray-300x">
+                            <input type="radio" name="date" id="filter-4" class="sr-only"
+                                value="{{date_range[4]}}">
+                            <label for="filter-4"
+                                class="h-8 py-1 px-2 flex-1 text-sm leading-6 text-gray-600 hover:text-gray-800 bg-white rounded shadow-md">
+                                {{day_range[4]}}
+                            </label>
+                        </li>
+                    </ul>
                 </div>
+             
+                <!-- Inputs for City and Country -->
+                <div class="flex space-x-4">
+                    <!-- Input for City -->
+                    <div class="flex-1">
+                        <label class="block pl-1.5 text-sm font-medium text-gray-700">City</label>
+                        <input type="text" name="city" required
+                            class="mt-3 h-8 pl-1.5 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    </div>
+                    <!-- Dropdown for Country -->
+                    <div class="flex-1">
+                        <label class="block pl-1.5 text-sm font-medium text-gray-700">Country</label>
+                        <select name="country" required
+                            class="mt-3 h-8 pl-1.5 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                            <option value="" disabled selected></option>
+                            {% for country in countries %}
+                            <option value="{{ country.code }}">{{ country.name }}</option>
+                            {% endfor %}
+                           
+                        </select>
+                    </div>
+                </div>
+                <!-- Text area for Event Description -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Description</label>
+                    <label class="block pl-1.5 text-sm font-medium text-gray-700">Description</label>
                     <textarea name="description" rows="3"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+                        class="mt-1 p-1.5 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
                 </div>
+                <!-- Submit Button -->
                 <button type="submit"
                     class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                     Add Event
@@ -30,24 +103,36 @@
             </div>
         </form>
     </div>
+</div>
 
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-2xl font-bold mb-4">Events</h2>
-        {% if events %}
-        <div class="space-y-4">
-            {% for event in events %}
-            <div class="border-l-4 border-blue-500 pl-4 py-2">
-                <h3 class="font-bold">{{ event.title }}</h3>
-                <p class="text-sm text-gray-600">{{ event.date }}</p>
-                {% if event.description %}
-                <p class="text-gray-700 mt-1">{{ event.description }}</p>
+<!-- Display Scheduled Events -->
+<div class="bg-white rounded-lg shadow-md p-6 max-w-2xl mx-auto ">
+    <h2 class="text-2xl font-bold mb-4">Events</h2>
+    {% if events %}
+    <div class="space-y-4">
+        {% for event in events %}
+        <div class="border-l-4 border-blue-500 pl-4 py-2 flex items-center justify-between">
+            <!-- Event Details Section -->
+            <div class="flex-1 pr-4">
+                <h3 class="font-bold">{{ event[0].name }}</h3>
+                <p class="text-sm text-gray-600">{{ event[0].date }}</p>
+                {% if event[0].description %}
+                <p class="text-gray-700 mt-1">{{ event[0].description }}</p>
                 {% endif %}
             </div>
-            {% endfor %}
+            <!-- Picture Placeholder Section -->
+            <div class="picture-output w-20 h-20 flex-shrink-0 bg-gray-200 rounded-md flex items-center justify-center shadow-inner">
+                <img src="{{ url_for('static', filename=event[1]) }}" alt="Event Picture" class="w-full h-full object-cover rounded-md" />
+            </div>
         </div>
-        {% else %}
-        <p class="text-gray-600">No events scheduled yet.</p>
-        {% endif %}
+        {% endfor %}
     </div>
+    {% else %}
+    <!-- No Events Message -->
+    <p class="text-gray-600">No events scheduled yet.</p>
+    {% endif %}
 </div>
+
+
 {% endblock %}
+
