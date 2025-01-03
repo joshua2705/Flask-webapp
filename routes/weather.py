@@ -31,19 +31,6 @@ def weather_page():
     # Fetch weather data for the provided city and country
     forecast = get_weather(city, unit)
 
-    if not forecast or 'current' not in forecast:
-        # Handle errors or missing data with default values
-        forecast = {
-            'current': {'temp': 0, 'condition': 'Unknown', 'humidity': 0},
-            'forecast': [
-                {'day': 'N/A', 'temp': 0, 'condition': 'Unknown'},
-                {'day': 'N/A', 'temp': 0, 'condition': 'Unknown'},
-                {'day': 'N/A', 'temp': 0, 'condition': 'Unknown'}
-            ],
-            'city': 'N/A',
-            'country': ''
-        }
-
     # Select the appropriate weather icon based on the current condition
     forecast_image_file = select_image(forecast['current']['condition'])
 

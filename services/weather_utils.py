@@ -57,6 +57,7 @@ def select_image(condition):
     """
     images = {
         "Sunny": "images/clearsky.png",
+        "Clear": "images/clearsky.png",
         "Clouds": "images/cloudy.png",
         "Rain": "images/rain.png",
         "Mist": "images/mist.png",
