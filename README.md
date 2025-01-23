@@ -1,6 +1,6 @@
 # SkyGuru: Weather Forecast Web Application
 
-![SkyGuru Logo](image1.png)
+![SkyGuru Logo](DocImages/image1.png)
 
 ## Project Background
 
@@ -20,7 +20,8 @@ The goal of the project is to help travelers plan their trips by forecasting wea
 
 **Technical Note**: The free API supports weather forecasts up to five days in advance.
 
-![Home Page UI](image2.png)
+![Home Page UI](DocImages/image2.png)
+![Scheduler Page UI](DocImages/image3.png)
 
 ### Reasoning
 The project was designed to cater to varying skill levels among team members, offering opportunities to work on API integration, UI design, and modular programming. 
@@ -28,8 +29,6 @@ The project was designed to cater to varying skill levels among team members, of
 ---
 
 ## Collaboration and Development Framework
-
-![Collaboration](image3.png)
 
 - **Frameworks & Tools**: Built using Flask for backend, HTML, and Tailwind CSS for frontend.
 - **Version Control**: Collaborated via GitHub for task management and code integration using a branching model.
@@ -69,7 +68,7 @@ The project was designed to cater to varying skill levels among team members, of
    - Added radio buttons for date selection.
    - Improved maintainability and modularity.
 
-![Weather Display](image4.png)
+![Weather Display](DocImages/image4.png)
 
 ### V2: Final Version
 
@@ -111,7 +110,8 @@ The project was designed to cater to varying skill levels among team members, of
 
 ## Learning Contributions
 
-![Team Contributions](image5.png)
+![Team Contributions](DocImages/image5.png)
+![//]: <png image from pngtree.com>
 
 ### Mathilde:
 - Focused on API integration and modularity.
